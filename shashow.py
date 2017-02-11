@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import (QLabel, QLineEdit, QPushButton,QWidget,
     QApplication, QFrame, QGridLayout)
 
 
-
 class MyApp(QWidget):
 
     def __init__(self, parent=None):
@@ -56,11 +55,6 @@ class MyApp(QWidget):
         self.saltLine.returnPressed.connect(self.logic)
 
 
-    # def show_about(self):
-    #
-    #     self.about = QWidget(self)
-    #     self.about.show()
-
     def logic(self):
         """
         Calculates hash from salt and password
@@ -75,6 +69,7 @@ class MyApp(QWidget):
 
         if e.key() == Qt.Key_Return:
             self.logic()
+
 
     def keyPressEvent(self, e):
 
