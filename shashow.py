@@ -5,11 +5,11 @@ import sys
 import crypt
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (QLabel, QLineEdit, QPushButton,QWidget,
-    QApplication, QFrame, QGridLayout)
+from PyQt5.QtWidgets import (QLabel, QLineEdit, QPushButton, QWidget,
+    QApplication, QFrame, QGridLayout, QMainWindow, QAction, qApp)
 
 
-class MyApp(QWidget):
+class MyApp(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -23,46 +23,64 @@ class MyApp(QWidget):
         self.setWindowTitle("Password hash calculator | Linux")
         self.setWindowIcon(QIcon("shadow.png"))
 
-        self.saltLabel = QLabel("Salt:")
-        self.saltLine = QLineEdit()
-        self.saltLine.setPlaceholderText("e.g. $6$xxxxxxxx")
-        self.passwordLabel = QLabel("Password:")
-        self.passwordLine = QLineEdit()
-        self.hashLabel = QLabel("Hash:")
-        self.hashSunkenLabel = QLabel()
+        # central widget
+        self.widget = QWidget(self)
+        self.setCentralWidget(self.widget)
+
+        self.widget.saltLabel = QLabel("Salt:")
+        self.widget.saltLine = QLineEdit()
+        self.widget.saltLine.setPlaceholderText("e.g. $6$xxxxxxxx")
+        self.widget.passwordLabel = QLabel("Password:")
+        self.widget.passwordLine = QLineEdit()
+        self.widget.hashLabel = QLabel("Hash:")
+        self.widget.hashSunkenLabel = QLabel()
         # self.hashSunkenLabel.setFrameStyle(QFrame.Box | QFrame.Sunken)
-        self.hashSunkenLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        self.widget.hashSunkenLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         # enable selectable text to be able to copy it
-        self.hashSunkenLabel.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        self.resultButton = QPushButton("&Calculate", self)
-        self.resultButton.setMaximumSize(100, 50)
+        self.widget.hashSunkenLabel.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.widget.resultButton = QPushButton("&Calculate", self)
+        self.widget.resultButton.sizeHint()
+        self.widget.resultButton.setMaximumSize(100, 50)
+
+        aboutAction = QAction(QIcon('exit.png'), "&About", self)
+        aboutAction.setShortcut('Ctrl+B')
+        aboutAction.setStatusTip('About')
+        aboutAction.triggered.connect(self.show_about)
+
+        # menubar
+        menu_bar = self.menuBar()
+        fileMenu = menu_bar.addMenu("&File")
+        helpMenu = menu_bar.addMenu("&Help")
+        helpMenu.addAction(aboutAction)
 
         # set layout
         grid = QGridLayout()
-        grid.addWidget(self.passwordLabel, 0, 0)
-        grid.addWidget(self.passwordLine, 0, 1)
-        grid.addWidget(self.saltLabel, 1, 0)
-        grid.addWidget(self.saltLine, 1, 1)
-        grid.addWidget(self.resultButton, 2, 1)
-        grid.addWidget(self.hashLabel, 3, 0)
-        grid.addWidget(self.hashSunkenLabel, 3, 1)
-        self.setLayout(grid)
+        grid.addWidget(self.widget.passwordLabel, 0, 0)
+        grid.addWidget(self.widget.passwordLine, 0, 1)
+        grid.addWidget(self.widget.saltLabel, 1, 0)
+        grid.addWidget(self.widget.saltLine, 1, 1)
+        grid.addWidget(self.widget.resultButton, 2, 1)
+        grid.addWidget(self.widget.hashLabel, 3, 0)
+        grid.addWidget(self.widget.hashSunkenLabel, 3, 1)
+        self.widget.setLayout(grid)
 
-        self.resultButton.clicked.connect(self.logic)
+        self.widget.resultButton.clicked.connect(self.logic)
         # this method emits 'clicked' signal when 'Enter' is pressed
-        self.resultButton.setAutoDefault(True)
-        self.passwordLine.returnPressed.connect(self.logic)
-        self.saltLine.returnPressed.connect(self.logic)
+        self.widget.resultButton.setAutoDefault(True)
+        self.widget.passwordLine.returnPressed.connect(self.logic)
+        self.widget.saltLine.returnPressed.connect(self.logic)
 
 
     def logic(self):
         """
         Calculates hash from salt and password
         """
-        salt = self.saltLine.text()
-        password = self.passwordLine.text()
+        salt = self.widget.saltLine.text()
+        password = self.widget.passwordLine.text()
         resulting_hash = crypt.crypt(password, salt)
-        self.hashSunkenLabel.setText(resulting_hash)
+        #if resulting_hash and salt and password:
+        #    self.statusBar().showMessage("Ready")
+        self.widget.hashSunkenLabel.setText(resulting_hash)
 
 
     def keyPressEvent(self, e):
@@ -70,11 +88,15 @@ class MyApp(QWidget):
         if e.key() == Qt.Key_Return:
             self.logic()
 
-
-    def keyPressEvent(self, e):
-
         if e.key() == Qt.Key_Escape:
             self.close()
+
+
+    def show_about(self):
+
+        self.about = QWidget()
+        #self.widget.hide()
+        self.about.show()
 
 
 def main():
