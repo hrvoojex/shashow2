@@ -6,8 +6,7 @@ import crypt
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QLabel, QLineEdit, QPushButton, QWidget,
-    QApplication, QFrame, QGridLayout,QHBoxLayout, QMainWindow, QAction, qApp,
-    QStackedWidget)
+    QApplication, QFrame, QGridLayout,QHBoxLayout, QMainWindow, QAction)
 
 
 class About(QWidget):
@@ -42,6 +41,7 @@ class Main(QWidget):
     """
            A main widget (page) with labels and calculation button
     """
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -78,6 +78,9 @@ class Main(QWidget):
 
 
 class MyApp(QMainWindow):
+    """
+    Main application class
+    """
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -110,11 +113,13 @@ class MyApp(QMainWindow):
         self.main.show()
         self.about.hide()
 
+        # action for menu entrie "about"
         aboutAction = QAction(QIcon('exit.png'), "&About", self)
         aboutAction.setShortcut('Ctrl+B')
         aboutAction.setStatusTip('About')
         aboutAction.triggered.connect(self.show_about)
 
+        # action for menu entrie "main"
         mainAction = QAction(QIcon('exit.png'), "&Hash", self)
         mainAction.setShortcut('Ctrl+H')
         mainAction.setStatusTip('New')
@@ -154,19 +159,17 @@ class MyApp(QMainWindow):
         salt = self.main.saltLine.text()
         password = self.main.passwordLine.text()
         resulting_hash = crypt.crypt(password, salt)
-        #if resulting_hash and salt and password:
-        #    self.statusBar().showMessage("Ready")
         self.main.hashSunkenLabel.setText(resulting_hash)
 
 
     def keyPressEvent(self, e):
-
+        # if enter is pressed simulate button press
         if e.key() == Qt.Key_Return:
             self.logic()
-
+        # if escape key is pressed close the application
+        # self.close is MaApp close() which is QWidget's close()
         if e.key() == Qt.Key_Escape:
             self.close()
-
 
 
 def main():
