@@ -6,7 +6,7 @@ import crypt
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QLabel, QLineEdit, QPushButton, QWidget,
-    QApplication, QFrame, QGridLayout, QMainWindow, QAction, qApp)
+    QApplication, QFrame, QGridLayout,QHBoxLayout, QMainWindow, QAction, qApp)
 
 
 class MyApp(QMainWindow):
@@ -19,12 +19,12 @@ class MyApp(QMainWindow):
 
     def initui(self):
         # main window size, title and icon
-        self.setGeometry(300, 300, 800, 170)
+        self.setGeometry(300, 300, 800, 200)
         self.setWindowTitle("Password hash calculator | Linux")
         self.setWindowIcon(QIcon("shadow.png"))
 
         # central widget
-        self.widget = QWidget(self)
+        self.widget = QWidget()
         self.setCentralWidget(self.widget)
 
         self.widget.saltLabel = QLabel("Salt:")
@@ -47,14 +47,21 @@ class MyApp(QMainWindow):
         aboutAction.setStatusTip('About')
         aboutAction.triggered.connect(self.show_about)
 
+        newAction = QAction(QIcon('exit.png'), "&New", self)
+        newAction.setShortcut('Ctrl+N')
+        newAction.setStatusTip('New')
+        newAction.triggered.connect(self.show_main)
+
         # menubar
         menu_bar = self.menuBar()
         fileMenu = menu_bar.addMenu("&File")
+        fileMenu.addAction(newAction)
         helpMenu = menu_bar.addMenu("&Help")
         helpMenu.addAction(aboutAction)
 
         # set layout
         grid = QGridLayout()
+        grid.setSpacing(5)
         grid.addWidget(self.widget.passwordLabel, 0, 0)
         grid.addWidget(self.widget.passwordLine, 0, 1)
         grid.addWidget(self.widget.saltLabel, 1, 0)
@@ -94,9 +101,24 @@ class MyApp(QMainWindow):
 
     def show_about(self):
 
+        # this creates a new centra widget and displays a txt file in a label
         self.about = QWidget()
-        #self.widget.hide()
+        self.about.setGeometry(300, 300, 700, 180)
+        self.about.aboutLabel = QLabel("", self.about)
+
+        # read from file into a label
+        with open("About.txt", "r") as infile:
+            data = infile.read()
+            self.about.aboutLabel.setText(data)
+
         self.about.show()
+
+
+    def show_main(self):
+
+        #self.about.hide()
+        #self.widget = QWidget()
+        self.setCentralWidget(self.widget)
 
 
 def main():
