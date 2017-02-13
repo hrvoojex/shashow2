@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Learning PyQt5.
+
+In this application, I created three classes,
+added QGridLayout, connected key press to a
+functions.
+
+author: Hrvoje T
+website: jankovci.net
+last edited: February 2017
+"""
 
 import sys
 import crypt
@@ -11,10 +22,7 @@ from PyQt5.QtWidgets import (QLabel, QLineEdit, QPushButton, QWidget,
 
 
 class About(QWidget):
-    """
-        A 'About' widget (page)
-    """
-
+    """A 'About' widget (page)"""
     def __init__(self, parent=None):
         super(About, self).__init__(parent)
 
@@ -22,7 +30,7 @@ class About(QWidget):
 
 
     def initui(self):
-
+            """Initialize UI of a class About"""
             # add a label to write a file in it
             self.labelAbout = QLabel(self)
 
@@ -39,10 +47,7 @@ class About(QWidget):
 
 
 class Main(QWidget):
-    """
-           A main widget (page) with labels and calculation button
-    """
-
+    """A main widget (page) with labels and calculation button"""
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -50,7 +55,7 @@ class Main(QWidget):
 
 
     def initui(self):
-
+        """Initialize UI of main widget"""
         self.saltLabel = QLabel("Salt:")
         self.saltLine = QLineEdit()
         self.saltLine.setPlaceholderText("e.g. $6$xxxxxxxx")
@@ -79,10 +84,7 @@ class Main(QWidget):
 
 
 class MyApp(QMainWindow):
-    """
-    Main application class
-    """
-
+    """Main application class"""
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -90,7 +92,7 @@ class MyApp(QMainWindow):
 
 
     def initui(self):
-
+        """Initialize UI of an application"""
         # main window size, title and icon
         self.setGeometry(300, 300, 800, 200)
         self.setWindowTitle("Password hash calculator | Linux")
@@ -142,21 +144,21 @@ class MyApp(QMainWindow):
 
 
     def show_main(self):
+        """Action when 'Hash' menu is pressed"""
         self.about.hide()
         self.main.show()
         self.setWindowTitle("Password hash calculator | Linux")
 
 
     def show_about(self):
+        """Action when 'about' menu is pressed"""
         self.main.hide()
         self.about.show()
         self.setWindowTitle("Password hash calculator | About | Linux")
 
 
     def logic(self):
-        """
-        Calculates hash from salt and password
-        """
+        """Calculates hash from salt and password"""
         salt = self.main.saltLine.text()
         password = self.main.passwordLine.text()
         resulting_hash = crypt.crypt(password, salt)
@@ -164,10 +166,9 @@ class MyApp(QMainWindow):
 
 
     def keyPressEvent(self, e):
-        # if enter is pressed simulate button press
+        """Action when return or escape is pressed"""
         if e.key() == Qt.Key_Return:
             self.logic()
-        # if escape key is pressed close the application
         # self.close is MaApp close() which is QWidget's close()
         if e.key() == Qt.Key_Escape:
             self.close()
