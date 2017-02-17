@@ -8,8 +8,7 @@ In this application, I created three classes,
 added QGridLayout, connected key press to a
 functions.
 
-author: Hrvoje T
-website: jankovci.net
+author: hrvooje
 last edited: February 2017
 """
 
