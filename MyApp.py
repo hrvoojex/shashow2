@@ -1,14 +1,11 @@
 #!/Usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
-import crypt
+from sys import argv, exit
+from crypt import crypt
 from linuxShadowShow import Ui_TabWidget
-from PyQt5.QtWidgets import QTabWidget
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QTabWidget, QApplication, QMessageBox
+from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
 
 
@@ -51,7 +48,7 @@ class MyApp(QTabWidget, Ui_TabWidget):
         """Calculates hash from salt and password"""
         salt = self.lineEdit.text()
         password = self.lineEdit_2.text()
-        self.hash = crypt.crypt(password, salt)
+        self.hash = crypt(password, salt)
         self.label_3.setText(self.hash)
 
     def keyPressEvent(self, e):
@@ -75,10 +72,10 @@ class MyApp(QTabWidget, Ui_TabWidget):
 
 
 def main():
-    app = QApplication(sys.argv)
+    app = QApplication(argv)
     instance = MyApp()
     instance.show()
-    sys.exit(app.exec())
+    exit(app.exec())
 
 
 if __name__ == "__main__":
