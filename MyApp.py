@@ -8,16 +8,20 @@ from PyQt5.QtWidgets import QTabWidget
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-
 
 
 class MyApp(QTabWidget, Ui_TabWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        #  Defining instance attribut
+        self.hash = None
+
         self.setupUi(self)
         self.setWindowTitle("Shadow Hash Calculator")
+        self.setWindowIcon(QIcon("shadow.png"))
 
         # If you click pushButton or press enter in QLineEdit
         self.pushButton.clicked.connect(self.calculation)
@@ -29,12 +33,11 @@ class MyApp(QTabWidget, Ui_TabWidget):
         self.pixmap = QPixmap('hash.png')
         self.label_4.setPixmap(self.pixmap)
 
-        # Dispaly a text in a laybel and wrap it
+        # Display a text in a label and wrap it
         self.label_5.setText(
             "If you look in '<i>/etc/shadow</i>' file, this is how "
             "hashed password looks like. The <i>salt</i> part has a number in"
             "it. $6$ is for sha512crypt sheme and the password is the key. ")
-
         self.label_5.setWordWrap(True)
 
         # Add some local changes to widgets in gui file
@@ -49,7 +52,6 @@ class MyApp(QTabWidget, Ui_TabWidget):
         salt = self.lineEdit.text()
         password = self.lineEdit_2.text()
         self.hash = crypt.crypt(password, salt)
-
         self.label_3.setText(self.hash)
 
     def keyPressEvent(self, e):
@@ -63,7 +65,7 @@ class MyApp(QTabWidget, Ui_TabWidget):
     def closeEvent(self, event):
         """Ask for closing confirmation"""
         reply = QMessageBox.question(
-            self, 'Message', "Quit?",
+            self, 'Confirm Quit - Shadow Hash Calculator', "Quit?",
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.Yes)
         if reply == QMessageBox.Yes:
