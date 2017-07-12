@@ -1,0 +1,10 @@
+This application is used to calculate a password hash in Linux's "/etc/shadow" file if you forgot your password.
+Enter your wished password, enter your hash salt and copy resulting hash in your /etc/shadow file.
+
+Between first two $ charachters is hash algorithm: 1:MD5, 2:Blowfish, 2a:eksBlowfish, 5:SHA-256, 6:SHA-512
+Between second two $ characters is a salt. The rest until the colon is a password.
+root:$6$OoiHHarHJnAzdt$2iVY6RZ4Cgb4:17128:0:99999:7:::
+
+Author: Hrvoje T.
+Email: hrvooje@gmail.com
+
